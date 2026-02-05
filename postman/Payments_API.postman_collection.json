@@ -1,0 +1,137 @@
+{
+  "info": {
+    "name": "Payments API",
+    "description": "Colección para validar el microservicio de pagos (compras de libros)",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8081"
+    },
+    {
+      "key": "gatewayUrl",
+      "value": "http://localhost:8762/payments"
+    }
+  ],
+  "item": [
+    {
+      "name": "Compras",
+      "item": [
+        {
+          "name": "Crear compra (éxito)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"items\": [\n    {\n      \"bookId\": 1,\n      \"quantity\": 2\n    }\n  ]\n}"
+            },
+            "url": "{{baseUrl}}/api/v1/purchases",
+            "description": "Registra una compra de 2 unidades del libro con id 1. Requiere que el libro exista en books-ms, tenga stock y esté visible."
+          }
+        },
+        {
+          "name": "Crear compra - varios libros",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"items\": [\n    { \"bookId\": 1, \"quantity\": 1 },\n    { \"bookId\": 2, \"quantity\": 3 }\n  ]\n}"
+            },
+            "url": "{{baseUrl}}/api/v1/purchases",
+            "description": "Registra una compra con varios libros. Si alguno no existe, no tiene stock o no está visible, la compra no se completa."
+          }
+        },
+        {
+          "name": "Crear compra - validación (items vacíos)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"items\": []\n}"
+            },
+            "url": "{{baseUrl}}/api/v1/purchases",
+            "description": "Debe devolver 400: la compra debe incluir al menos un libro."
+          }
+        },
+        {
+          "name": "Crear compra - validación (libro inexistente)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"items\": [\n    { \"bookId\": 99999, \"quantity\": 1 }\n  ]\n}"
+            },
+            "url": "{{baseUrl}}/api/v1/purchases",
+            "description": "Debe devolver 400: libro no existe en el catálogo (books-ms debe estar arriba y Eureka resuelva 'search')."
+          }
+        },
+        {
+          "name": "Crear compra - validación (stock insuficiente)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"items\": [\n    { \"bookId\": 1, \"quantity\": 9999 }\n  ]\n}"
+            },
+            "url": "{{baseUrl}}/api/v1/purchases",
+            "description": "Debe devolver 400: stock insuficiente para el libro."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Via Gateway",
+      "item": [
+        {
+          "name": "Crear compra (por Gateway)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"items\": [\n    { \"bookId\": 1, \"quantity\": 1 }\n  ]\n}"
+            },
+            "url": "{{gatewayUrl}}/api/v1/purchases",
+            "description": "Misma operación pero pasando por el Gateway (Eureka debe tener registrado 'payments')."
+          }
+        }
+      ]
+    }
+  ]
+}
