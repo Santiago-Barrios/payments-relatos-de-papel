@@ -15,4 +15,13 @@ public class BookResponseDto {
     private Integer valoration;
     private Boolean isVisible;
     private Integer currentStock;
+    private Double price;
+    private String imageUrl;
+    private String description;
+    private String editorial;
+    private String language;
+    private Integer pages;
+    private Integer edition;
+    private String biography;
+    private String authorPhotoUrl;
 }

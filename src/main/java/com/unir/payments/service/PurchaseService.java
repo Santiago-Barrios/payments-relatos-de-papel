@@ -99,6 +99,15 @@ public class PurchaseService {
             updateRequest.setValoration(book.getValoration());
             updateRequest.setIsVisible(book.getIsVisible());
             updateRequest.setCurrentStock(newStock);
+            updateRequest.setPrice(book.getPrice());
+            updateRequest.setImageUrl(book.getImageUrl());
+            updateRequest.setDescription(book.getDescription());
+            updateRequest.setEditorial(book.getEditorial());
+            updateRequest.setLanguage(book.getLanguage());
+            updateRequest.setPages(book.getPages());
+            updateRequest.setEdition(book.getEdition());
+            updateRequest.setBiography(book.getBiography());
+            updateRequest.setAuthorPhotoUrl(book.getAuthorPhotoUrl());
 
             bookCatalogClient.updateBook(book.getId(), updateRequest);
         }
